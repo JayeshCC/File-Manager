@@ -1,4 +1,5 @@
 import os
+from tkinter import Tk, filedialog
 import tkinter as tk
 from datetime import datetime, timedelta
 
@@ -15,6 +16,8 @@ from ttkbootstrap.tooltip import ToolTip
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from ttkbootstrap.dialogs.dialogs import Querybox
 
+import sort
+import tag
 import ext
 import json
 
@@ -53,7 +56,7 @@ def createWindow():
     root.title("My File Explorer")
     root.geometry("1280x720")
     root.resizable(True, True)
-    root.iconphoto(False, tk.PhotoImage(file=file_path + "icon.png"))
+    root.iconphoto(False, tk.PhotoImage(file=file_path + "../icons/icon.png"))
     return root
 
 def refresh(queryNames):
@@ -84,7 +87,7 @@ def refresh(queryNames):
     for i in range(len(fileNames)):
         try:
             found = False
-            for file in tag_files:
+            for file in tag.tag_files:
                 if file['file_name'] == os.getcwd() + "\\" + fileNames[i]:
                     found = True
                     tag_type = file['tag_type']
@@ -243,13 +246,13 @@ def create_widgets(window):
     grip = ttk.Sizegrip(footerFrame, bootstyle="default")
     # --Footer Frame
 
-    folderIcon = tk.PhotoImage(file=file_path + "folder.png", width=20, height=16)
-    fileIcon = tk.PhotoImage(file=file_path + "file.png", width=20, height=16)
+    folderIcon = tk.PhotoImage(file=file_path + "../icons/folder.png", width=20, height=16)
+    fileIcon = tk.PhotoImage(file=file_path + "../icons/file.png", width=20, height=16)
 
     # Header Frame
-    refreshIcon = tk.PhotoImage(file=file_path + "reload.png")
-    backArrowIcon = tk.PhotoImage(file=file_path + "back.png")
-    frontArrowIcon = tk.PhotoImage(file=file_path + "next.png")
+    refreshIcon = tk.PhotoImage(file=file_path + "../icons/reload.png")
+    backArrowIcon = tk.PhotoImage(file=file_path + "../icons/back.png")
+    frontArrowIcon = tk.PhotoImage(file=file_path + "../icons/next.png")
     headerFrame = ttk.Frame()
     cwdLabel = ttk.Label(
         headerFrame,
@@ -287,40 +290,40 @@ def create_widgets(window):
     # --Header Frame
 
     # imgs
-    open_img = Image.open(file_path + "icon.png")
+    open_img = Image.open(file_path + "../icons/icon.png")
     open_photo = ImageTk.PhotoImage(open_img)
 
-    refresh_img = Image.open(file_path + "reload.png")
+    refresh_img = Image.open(file_path + "../icons/reload.png")
     refresh_photo = ImageTk.PhotoImage(refresh_img)
 
-    tag_img = Image.open(file_path + "next.png")
+    tag_img = Image.open(file_path + "../icons/next.png")
     tag_photo = ImageTk.PhotoImage(tag_img)
 
-    untag_img = Image.open(file_path + "back.png")
+    untag_img = Image.open(file_path + "../icons/back.png")
     untag_photo = ImageTk.PhotoImage(untag_img)
 
-    rename_img = Image.open(file_path + "rename.png")
+    rename_img = Image.open(file_path + "../icons/rename.png")
     rename_photo = ImageTk.PhotoImage(rename_img)
 
-    drive_img = Image.open(file_path + "drive.png")
+    drive_img = Image.open(file_path + "../icons/drive.png")
     drive_photo = ImageTk.PhotoImage(drive_img)
 
-    info_img = Image.open(file_path + "info.png")
+    info_img = Image.open(file_path + "../icons/info.png")
     info_photo = ImageTk.PhotoImage(info_img)
 
-    file_img = Image.open(file_path + "file.png")
+    file_img = Image.open(file_path + "../icons/file.png")
     file_photo = ImageTk.PhotoImage(file_img)
 
-    dir_img = Image.open(file_path + "folder.png")
+    dir_img = Image.open(file_path + "../icons/folder.png")
     dir_photo = ImageTk.PhotoImage(dir_img)
 
-    copy_img = Image.open(file_path + "copy.png")
+    copy_img = Image.open(file_path + "../icons/copy.png")
     copy_photo = ImageTk.PhotoImage(copy_img)
 
-    paste_img = Image.open(file_path + "paste.png")
+    paste_img = Image.open(file_path + "../icons/paste.png")
     paste_photo = ImageTk.PhotoImage(paste_img)
 
-    delete_img = Image.open(file_path + "delete.png")
+    delete_img = Image.open(file_path + "../icons/delete.png")
     delete_photo = ImageTk.PhotoImage(delete_img)
 
     # Right click menu
@@ -362,11 +365,11 @@ def create_widgets(window):
     )
     m.add_separator()
     sub_tag = ttk.Menu(window, tearoff=False, font=("TkDefaultFont", font_size))
-    sub_tag.add_command(label="1 minitue (Red)", command=partial(tag_popup, "Red"))
-    sub_tag.add_command(label="1 hour (Orange)", command=partial(tag_popup, "Orange"))
-    sub_tag.add_command(label="1 day (Purple)", command=partial(tag_popup, "Purple"))
-    sub_tag.add_command(label="7 day (Yellow)", command=partial(tag_popup, "Yellow"))
-    sub_tag.add_command(label="30 day (Green)", command=partial(tag_popup, "Green"))
+    sub_tag.add_command(label="1 minitue (Red)", command=partial(tag.tag_popup, "Red"))
+    sub_tag.add_command(label="1 hour (Orange)", command=partial(tag.tag_popup, "Orange"))
+    sub_tag.add_command(label="1 day (Purple)", command=partial(tag.tag_popup, "Purple"))
+    sub_tag.add_command(label="7 day (Yellow)", command=partial(tag.tag_popup, "Yellow"))
+    sub_tag.add_command(label="30 day (Green)", command=partial(tag.tag_popup, "Green"))
     m.add_cascade(
         label="Tag selected",
         image=tag_photo,
@@ -377,7 +380,7 @@ def create_widgets(window):
         label="UnTag selected",
         image=untag_photo,
         compound="left",
-        command=untag_popup,
+        command=tag.untag_popup,
     )
     m.add_command(
         label="Delete duplicate",
@@ -386,7 +389,7 @@ def create_widgets(window):
         command=del_dup_popup,
     )
     sub_del_tag = ttk.Menu(window, tearoff=False, font=("TkDefaultFont", font_size))
-    sub_del_tag.add_command(label="1 minitue (Red)", command=partial(del_tag_popup, "Minitue"))
+    sub_del_tag.add_command(label="1 minute (Red)", command=partial(del_tag_popup, "Minute"))
     sub_del_tag.add_command(label="1 hour (Orange)", command=partial(del_tag_popup, "Hour"))
     sub_del_tag.add_command(label="1 day (Purple)", command=partial(del_tag_popup, "Day"))
     sub_del_tag.add_command(label="7 day (Yellow)", command=partial(del_tag_popup, "Week"))
@@ -428,31 +431,31 @@ def create_widgets(window):
         "Tag",
         text=" ",
         anchor=tk.CENTER,
-        command=partial(sort_col, "Tag", False),
+        command=partial(sort.sort_col, "Tag", False),
     )
     items.heading(
         "Name",
         text="Name",
         anchor=tk.CENTER,
-        command=partial(sort_col, "Name", False),
+        command=partial(sort.sort_col, "Name", False),
     )
     items.heading(
         "Date modified",
         text="Date modified",
         anchor=tk.CENTER,
-        command=partial(sort_col, "Date modified", False),
+        command=partial(sort.sort_col, "Date modified", False),
     )
     items.heading(
         "Type",
         text="Type",
         anchor=tk.CENTER,
-        command=partial(sort_col, "Type", False),
+        command=partial(sort.sort_col, "Type", False),
     )
     items.heading(
         "Size",
         text="Size",
         anchor=tk.CENTER,
-        command=partial(sort_col, "Size", False),
+        command=partial(sort.sort_col, "Size", False),
     )
     items.bind(
         "<Double-1>",
@@ -508,11 +511,11 @@ def create_widgets(window):
     )
     file_menu.add_separator()
     sub_tag = ttk.Menu(window, tearoff=False, font=("TkDefaultFont", font_size))
-    sub_tag.add_command(label="1 minitue (Red)", command=partial(tag_popup, "Red"))
-    sub_tag.add_command(label="1 hour (Orange)", command=partial(tag_popup, "Orange"))
-    sub_tag.add_command(label="1 day (Purple)", command=partial(tag_popup, "Purple"))
-    sub_tag.add_command(label="7 day (Yellow)", command=partial(tag_popup, "Yellow"))
-    sub_tag.add_command(label="30 day (Green)", command=partial(tag_popup, "Green"))
+    sub_tag.add_command(label="1 minitue (Red)", command=partial(tag.tag_popup, "Red"))
+    sub_tag.add_command(label="1 hour (Orange)", command=partial(tag.tag_popup, "Orange"))
+    sub_tag.add_command(label="1 day (Purple)", command=partial(tag.tag_popup, "Purple"))
+    sub_tag.add_command(label="7 day (Yellow)", command=partial(tag.tag_popup, "Yellow"))
+    sub_tag.add_command(label="30 day (Green)", command=partial(tag.tag_popup, "Green"))
     file_menu.add_cascade(
         label="Tag selected",
         image=tag_photo,
@@ -523,7 +526,7 @@ def create_widgets(window):
         label="UnTag selected",
         image=untag_photo,
         compound="left",
-        command=untag_popup,
+        command=tag.untag_popup,
     )
     file_menu.add_command(
         label="Delete duplicate",
@@ -618,42 +621,7 @@ def create_widgets(window):
     window.bind("<Control-Shift-N>", wrap_new_dir)
 
 
-def sort_col(col, reverse):
-    global items
-    l = [(items.set(k, col), k) for k in items.get_children("")]
-    if col == "Name" or col == "Type":
-        l.sort(reverse=reverse)
-    elif col == "Date modified":
-        l = sorted(l, key=sort_key_dates, reverse=reverse)
-    elif col == "Size":
-        l = sorted(l, key=sort_key_size, reverse=reverse)
 
-    # rearrange items in sorted positions
-    for index, (val, k) in enumerate(l):
-        items.move(k, "", index)
-
-    # reverse sort next time
-    items.heading(col, command=partial(sort_col, col, not reverse))
-
-
-def sort_key_dates(item):
-    return datetime.strptime(item[0], "%d-%m-%Y %I:%M")
-
-
-def sort_key_size(item):
-    num_size = item[0].split(" ")[0]
-    if num_size != "":
-        return int(num_size)
-    else:
-        return -1  # if it's a directory, give it negative size value, for sorting
-
-
-def update_tag():
-    with open(file_path + "../res/tag_files.json", 'w') as outfile:
-        # Writing to file
-        data={}
-        data['items']  = tag_files
-        json.dump(data, outfile)
 
 def cd_drive(drive, queryNames):
     global fileNames, currDrive, cwdLabel
@@ -713,50 +681,7 @@ def rename_popup():
             message="There is no selected file or directory.", title="Info"
         )
 
-def tag_popup(tag_type):
-    global items
-    if items.focus() != "":
-        try:
-            selected = os.getcwd() + "\\" + selectedItem
-            found=False
-            for file in tag_files:
-                if file['file_name'] == selected:
-                    found = True
-            if not found:
-                new_item = {}
-                new_item['file_name'] = selected
-                new_item['tag_date'] = datetime.now().strftime(date_format)
-                new_item['tag_type'] = tag_type
-                tag_files.append(new_item)
-                update_tag()
-                refresh([])
-        except:
-            pass
-    else:
-        Messagebox.show_info(
-            message="There is no selected file or directory.", title="Info"
-        )
 
-def untag_popup():
-    global items
-    if items.focus() != "":
-        try:
-            selected = os.getcwd() + "\\" + selectedItem
-            found=False
-            for file in tag_files:
-                if file['file_name'] == selected:
-                    found = True
-                    founditem = file
-            if found:
-                tag_files.remove(founditem)
-                update_tag()
-                refresh([])
-        except:
-            pass
-    else:
-        Messagebox.show_info(
-            message="There is no selected file or directory.", title="Info"
-        )
 
 def selectItem(event):
     global selectedItem, items
@@ -785,7 +710,7 @@ def show_tag_popup():  # popup window
     str_files_Yellow = ''
     str_files_Orange = ''
     str_files_Purple = ''
-    for file in tag_files:
+    for file in tag.tag_files:
         if file['tag_type'] == 'Red':
             str_files_Red += file['file_name'] + '\n'
         elif file['tag_type'] == 'Green':
@@ -932,7 +857,7 @@ def del_dup_popup():
         )
 
 def del_tag_popup(del_upto):
-    if tag_files:
+    if tag.tag_files:
         delta = 0
         if del_upto == "Minitue":
             delta = timedelta(minutes=1)    
@@ -944,7 +869,7 @@ def del_tag_popup(del_upto):
             delta = timedelta(days=7)    
         elif del_upto == "Month":
             delta = timedelta(days=30)    
-        for tag_item in tag_files:
+        for tag_item in tag.tag_files:
             del_upto_date = datetime.strptime(tag_item['tag_date'],date_format)
             if datetime.now() >= del_upto_date + delta:
                 f_n = tag_item["file_name"]
@@ -954,8 +879,8 @@ def del_tag_popup(del_upto):
                 )
                 if answer == "Yes":
                     del_file(f_n)
-                    tag_files.remove(tag_item)
-        update_tag()
+                    tag.tag_files.remove(tag_item)
+        tag.update_tag()
         refresh([])
     else:
         Messagebox.show_info(
@@ -975,33 +900,22 @@ def del_file(file_name:str):
         # os.rmdir(os.getcwd() + "/" + selectedItem)
         shutil.rmtree(file_name)
 
-
-def read_tag():
-    global tag_files
-    if not os.path.isdir(file_path + "../res"):
-        os.mkdir(file_path + "../res") 
-    if not os.path.isfile(file_path + "../res/tag_files.json"):
-        with open(file_path + "../res/tag_files.json", 'w') as outfile:
-            # Writing to file
-            data={}
-            data['items']  = []
-            json.dump(data, outfile)
-    
-    with open(file_path + "../res/tag_files.json", 'r') as openfile:
-     # Reading from json file
-        data  = json.load(openfile)
-        tag_files = data['items']
+# main function
 
 def main():
     global theme
     global file_path
-    file_path = os.path.join(os.path.dirname(__file__), "../icons/")
+    if file_path is None:
+        root = Tk()
+        root.withdraw()  # Hide the main Tkinter window
+        file_path = filedialog.askdirectory(title="Select Default Directory")
+        root.destroy()  # Close the hidden Tkinter window
     checkPlatform()
     theme = "superhero"
     root = createWindow()
 
     create_widgets(root)
-    read_tag()
+    tag.read_tag()
     refresh([])
     root.mainloop()
 
