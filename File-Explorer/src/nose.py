@@ -18,8 +18,8 @@ if __name__ == "__main__":
     dark_mode = False
 
     # Load images for dark mode and light mode buttons
-    dark_image = PhotoImage(file="dark_mode.png").subsample(2)  # Adjust subsample factor as needed
-    light_image = PhotoImage(file="light_mode.png").subsample(2)  # Adjust subsample factor as needed
+    dark_image = PhotoImage(file="../icons/dark_mode.png").subsample(2)  # Adjust subsample factor as needed
+    light_image = PhotoImage(file="../icons/light_mode.png").subsample(2)  # Adjust subsample factor as needed
 
     # Toggle button for dark mode
     toggle_button = tk.Button(root, command=toggle_theme, relief="flat", bd=0, bg='white', image=dark_image)
