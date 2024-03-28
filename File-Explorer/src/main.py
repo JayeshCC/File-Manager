@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+from tkinter import PhotoImage
 from datetime import datetime, timedelta
 
 # from tkinter import ttk
@@ -11,6 +12,7 @@ import threading
 from PIL import Image, ImageTk
 
 import ttkbootstrap as ttk
+from ttkbootstrap import Style
 from ttkbootstrap.tooltip import ToolTip
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from ttkbootstrap.dialogs.dialogs import Querybox
@@ -35,6 +37,9 @@ fileIcon = 0
 items = 0  # holds treeview items
 cwdLabel = 0
 footer = 0
+
+style = Style()
+dark_mode = False
 
 def checkPlatform():
     global currDrive, available_drives
@@ -992,6 +997,17 @@ def read_tag():
         data  = json.load(openfile)
         tag_files = data['items']
 
+
+def toggle_theme():
+    global dark_mode
+    dark_mode = not dark_mode
+    if dark_mode:
+        style.theme_use('darkly')
+        toggle_button.config(image=light_image)
+    else:
+        style.theme_use('flatly')
+        toggle_button.config(image=dark_image)
+
 def main():
     global theme
     global file_path
@@ -1004,7 +1020,7 @@ def main():
     read_tag()
     refresh([])
     root.mainloop()
-
+    
 
 if __name__ == "__main__":
     main()
