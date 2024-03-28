@@ -993,7 +993,7 @@ def read_tag():
             json.dump(data, outfile)
     
     with open(file_path + "../res/tag_files.json", 'r') as openfile:
-     # Reading from json file
+    # Reading from json file
         data  = json.load(openfile)
         tag_files = data['items']
 
@@ -1014,13 +1014,27 @@ def main():
     file_path = os.path.join(os.path.dirname(__file__), "../icons/")
     checkPlatform()
     theme = "superhero"
+    # root = createWindow()
+
+    # create_widgets(root)
+    # read_tag()
+    # refresh([])
+    # root.mainloop()
+    
+
+if __name__ == "__main__":
     root = createWindow()
 
+    # Load images for dark mode and light mode buttons
+    dark_image = PhotoImage(file="../icons/dark_mode.png").subsample(2)  # Adjust subsample factor as needed
+    light_image = PhotoImage(file="../icons/light_mode.png").subsample(2)  # Adjust subsample factor as needed
+
+    # Toggle button for dark mode
+    toggle_button = tk.Button(root, command=toggle_theme, relief="flat", bd=0, bg='white', image=dark_image)
+    toggle_button.place(x=root.winfo_screenwidth()-dark_image.width(), y=root.winfo_screenheight()-dark_image.height(), anchor="se")
+
+    
     create_widgets(root)
     read_tag()
     refresh([])
     root.mainloop()
-    
-
-if __name__ == "__main__":
-    main()
