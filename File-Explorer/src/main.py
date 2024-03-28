@@ -1033,7 +1033,6 @@ if __name__ == "__main__":
     toggle_button = tk.Button(root, command=toggle_theme, relief="flat", bd=0, bg='white', image=dark_image)
     toggle_button.place(x=root.winfo_screenwidth()-dark_image.width(), y=root.winfo_screenheight()-dark_image.height(), anchor="se")
 
-    
     create_widgets(root)
     read_tag()
     refresh([])
