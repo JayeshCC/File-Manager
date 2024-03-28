@@ -1,6 +1,5 @@
 import os
 import tkinter as tk
-from tkinter import PhotoImage
 from datetime import datetime, timedelta
 
 # from tkinter import ttk
@@ -12,7 +11,6 @@ import threading
 from PIL import Image, ImageTk
 
 import ttkbootstrap as ttk
-from ttkbootstrap import Style
 from ttkbootstrap.tooltip import ToolTip
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from ttkbootstrap.dialogs.dialogs import Querybox
@@ -37,9 +35,6 @@ fileIcon = 0
 items = 0  # holds treeview items
 cwdLabel = 0
 footer = 0
-
-style = Style()
-dark_mode = False
 
 def checkPlatform():
     global currDrive, available_drives
@@ -578,6 +573,10 @@ def create_widgets(window):
     bar.add_cascade(label="Drives", menu=drives_menu, underline=0)
     bar.add_cascade(label="Help", menu=help_menu, underline=0)
     bar.add_cascade(label="About", menu=about_menu, underline=0)
+    
+    # theme_menu = tk.Menu(root, tearoff=0)
+    # root.config(menu=theme_menu)
+    # theme_menu.add_command(label="Switch to Dark Mode", command=switch_theme)
     # --Menu bar
 
     # packs
@@ -997,16 +996,21 @@ def read_tag():
         data  = json.load(openfile)
         tag_files = data['items']
 
-
-def toggle_theme():
-    global dark_mode
-    dark_mode = not dark_mode
-    if dark_mode:
-        style.theme_use('darkly')
-        toggle_button.config(image=light_image)
+def switch_theme():
+    global theme
+    if theme == "light":
+        theme = "dark"
     else:
-        style.theme_use('flatly')
-        toggle_button.config(image=dark_image)
+        theme = "light"
+    apply_theme()
+    refresh([])
+
+def apply_theme():
+    if theme == "light":
+        ttk.set_theme("light")
+    else:
+        ttk.set_theme("dark")
+
 
 def main():
     global theme
@@ -1014,26 +1018,13 @@ def main():
     file_path = os.path.join(os.path.dirname(__file__), "../icons/")
     checkPlatform()
     theme = "superhero"
-    # root = createWindow()
-
-    # create_widgets(root)
-    # read_tag()
-    # refresh([])
-    # root.mainloop()
-    
-
-if __name__ == "__main__":
     root = createWindow()
-
-    # Load images for dark mode and light mode buttons
-    dark_image = PhotoImage(file="../icons/dark_mode.png").subsample(2)  # Adjust subsample factor as needed
-    light_image = PhotoImage(file="../icons/light_mode.png").subsample(2)  # Adjust subsample factor as needed
-
-    # Toggle button for dark mode
-    toggle_button = tk.Button(root, command=toggle_theme, relief="flat", bd=0, bg='white', image=dark_image)
-    toggle_button.place(x=root.winfo_screenwidth()-dark_image.width(), y=root.winfo_screenheight()-dark_image.height(), anchor="se")
 
     create_widgets(root)
     read_tag()
     refresh([])
     root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
