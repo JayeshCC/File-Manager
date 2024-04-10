@@ -39,6 +39,7 @@ items = 0  # holds treeview items
 cwdLabel = 0
 footer = 0
 
+
 def checkPlatform():
     global currDrive, available_drives
     if platform == "win32":
@@ -50,6 +51,7 @@ def checkPlatform():
         available_drives = "/"
         currDrive = available_drives
 
+
 def createWindow():
     # root = tk.Tk()
     root = ttk.Window(themename=theme)
@@ -58,6 +60,7 @@ def createWindow():
     root.resizable(True, True)
     root.iconphoto(False, tk.PhotoImage(file=file_path + "../icons/icon.png"))
     return root
+
 
 def refresh(queryNames):
     global fileNames, folderIcon, fileIcon, items, cwdLabel, footer
@@ -72,11 +75,19 @@ def refresh(queryNames):
     else:
         fileNames = os.listdir(os.getcwd())
     # Ignore Window files which are not accessible
-    fileNames = [file for file in fileNames if not (file.startswith('$') or file.startswith('Config.Msi') 
-                                                    or file.startswith('hiberfil.sys') or file.startswith('DumpStack.log.tmp')
-                                                    or file.startswith('pagefile.sys') or file.startswith('swapfile.sys') 
-                                                    or file.startswith('System Volume Information')
-                                                    )]
+    fileNames = [
+        file
+        for file in fileNames
+        if not (
+            file.startswith("$")
+            or file.startswith("Config.Msi")
+            or file.startswith("hiberfil.sys")
+            or file.startswith("DumpStack.log.tmp")
+            or file.startswith("pagefile.sys")
+            or file.startswith("swapfile.sys")
+            or file.startswith("System Volume Information")
+        )
+    ]
     # print(fileNames)
     fileTypes = [None] * len(fileNames)
     fileSizes = [None] * len(fileNames)
@@ -88,21 +99,21 @@ def refresh(queryNames):
         try:
             found = False
             for file in tag.tag_files:
-                if file['file_name'] == os.getcwd() + "\\" + fileNames[i]:
+                if file["file_name"] == os.getcwd() + "\\" + fileNames[i]:
                     found = True
-                    tag_type = file['tag_type']
+                    tag_type = file["tag_type"]
             if found:
-                if tag_type == 'Red':
+                if tag_type == "Red":
                     fileTag.append("R")
-                elif tag_type == 'Green':
+                elif tag_type == "Green":
                     fileTag.append("G")
-                elif tag_type == 'Blue':
+                elif tag_type == "Blue":
                     fileTag.append("B")
-                elif tag_type == 'Yellow':
+                elif tag_type == "Yellow":
                     fileTag.append("Y")
-                elif tag_type == 'Orange':
+                elif tag_type == "Orange":
                     fileTag.append("O")
-                elif tag_type == 'Purple':
+                elif tag_type == "Purple":
                     fileTag.append("P")
             else:
                 fileTag.append("")
@@ -127,7 +138,13 @@ def refresh(queryNames):
                 items.insert(
                     parent="",
                     index=i,
-                    values=(fileTag[i], fileNames[i], fileDateModified[i], fileTypes[i], ""),
+                    values=(
+                        fileTag[i],
+                        fileNames[i],
+                        fileDateModified[i],
+                        fileTypes[i],
+                        "",
+                    ),
                     image=folderIcon,
                     tags=fileTag[i],
                 )
@@ -135,7 +152,13 @@ def refresh(queryNames):
                 items.insert(
                     parent="",
                     index=i,
-                    values=(fileTag[i], fileNames[i], fileDateModified[i], fileTypes[i], fileSizes[i]),
+                    values=(
+                        fileTag[i],
+                        fileNames[i],
+                        fileDateModified[i],
+                        fileTypes[i],
+                        fileSizes[i],
+                    ),
                     image=fileIcon,
                     tags=fileTag[i],
                 )
@@ -158,6 +181,7 @@ def refresh(queryNames):
     footer.pack(fill=tk.BOTH)
     # --Refresh Footer
 
+
 def wrap_refresh(event):  # wrapper for F5 bind
     refresh([])
 
@@ -175,6 +199,7 @@ def next():
         refresh([])
     except:
         return
+
 
 # open file
 def onDoubleClick(event=None):
@@ -230,13 +255,13 @@ def create_widgets(window):
         height=15,
         style="Custom.Treeview",
     )
-    items.tag_configure('B', background='#0000FF')
-    items.tag_configure('R', background='#FF0000')
-    items.tag_configure('G', background='#00FF00')
-    items.tag_configure('B', background='#0000FF')
-    items.tag_configure('Y', background='#FFFF00')
-    items.tag_configure('O', background='#FF7F00')
-    items.tag_configure('P', background='#7F007F')
+    items.tag_configure("B", background="#0000FF")
+    items.tag_configure("R", background="#FF0000")
+    items.tag_configure("G", background="#00FF00")
+    items.tag_configure("B", background="#0000FF")
+    items.tag_configure("Y", background="#FFFF00")
+    items.tag_configure("O", background="#FF7F00")
+    items.tag_configure("P", background="#7F007F")
     scroll.config(command=items.yview)  # scroll with mouse drag
     # --Browse Frame
 
@@ -246,7 +271,9 @@ def create_widgets(window):
     grip = ttk.Sizegrip(footerFrame, bootstyle="default")
     # --Footer Frame
 
-    folderIcon = tk.PhotoImage(file=file_path + "../icons/folder.png", width=20, height=16)
+    folderIcon = tk.PhotoImage(
+        file=file_path + "../icons/folder.png", width=20, height=16
+    )
     fileIcon = tk.PhotoImage(file=file_path + "../icons/file.png", width=20, height=16)
 
     # Header Frame
@@ -366,9 +393,15 @@ def create_widgets(window):
     m.add_separator()
     sub_tag = ttk.Menu(window, tearoff=False, font=("TkDefaultFont", font_size))
     sub_tag.add_command(label="1 minitue (Red)", command=partial(tag.tag_popup, "Red"))
-    sub_tag.add_command(label="1 hour (Orange)", command=partial(tag.tag_popup, "Orange"))
-    sub_tag.add_command(label="1 day (Purple)", command=partial(tag.tag_popup, "Purple"))
-    sub_tag.add_command(label="7 day (Yellow)", command=partial(tag.tag_popup, "Yellow"))
+    sub_tag.add_command(
+        label="1 hour (Orange)", command=partial(tag.tag_popup, "Orange")
+    )
+    sub_tag.add_command(
+        label="1 day (Purple)", command=partial(tag.tag_popup, "Purple")
+    )
+    sub_tag.add_command(
+        label="7 day (Yellow)", command=partial(tag.tag_popup, "Yellow")
+    )
     sub_tag.add_command(label="30 day (Green)", command=partial(tag.tag_popup, "Green"))
     m.add_cascade(
         label="Tag selected",
@@ -389,11 +422,21 @@ def create_widgets(window):
         command=del_dup_popup,
     )
     sub_del_tag = ttk.Menu(window, tearoff=False, font=("TkDefaultFont", font_size))
-    sub_del_tag.add_command(label="1 minute (Red)", command=partial(del_tag_popup, "Minute"))
-    sub_del_tag.add_command(label="1 hour (Orange)", command=partial(del_tag_popup, "Hour"))
-    sub_del_tag.add_command(label="1 day (Purple)", command=partial(del_tag_popup, "Day"))
-    sub_del_tag.add_command(label="7 day (Yellow)", command=partial(del_tag_popup, "Week"))
-    sub_del_tag.add_command(label="30 day (Green)", command=partial(del_tag_popup, "Month"))
+    sub_del_tag.add_command(
+        label="1 minute (Red)", command=partial(del_tag_popup, "Minute")
+    )
+    sub_del_tag.add_command(
+        label="1 hour (Orange)", command=partial(del_tag_popup, "Hour")
+    )
+    sub_del_tag.add_command(
+        label="1 day (Purple)", command=partial(del_tag_popup, "Day")
+    )
+    sub_del_tag.add_command(
+        label="7 day (Yellow)", command=partial(del_tag_popup, "Week")
+    )
+    sub_del_tag.add_command(
+        label="30 day (Green)", command=partial(del_tag_popup, "Month")
+    )
     m.add_cascade(
         label="Delete tagged",
         image=delete_photo,
@@ -512,9 +555,15 @@ def create_widgets(window):
     file_menu.add_separator()
     sub_tag = ttk.Menu(window, tearoff=False, font=("TkDefaultFont", font_size))
     sub_tag.add_command(label="1 minitue (Red)", command=partial(tag.tag_popup, "Red"))
-    sub_tag.add_command(label="1 hour (Orange)", command=partial(tag.tag_popup, "Orange"))
-    sub_tag.add_command(label="1 day (Purple)", command=partial(tag.tag_popup, "Purple"))
-    sub_tag.add_command(label="7 day (Yellow)", command=partial(tag.tag_popup, "Yellow"))
+    sub_tag.add_command(
+        label="1 hour (Orange)", command=partial(tag.tag_popup, "Orange")
+    )
+    sub_tag.add_command(
+        label="1 day (Purple)", command=partial(tag.tag_popup, "Purple")
+    )
+    sub_tag.add_command(
+        label="7 day (Yellow)", command=partial(tag.tag_popup, "Yellow")
+    )
     sub_tag.add_command(label="30 day (Green)", command=partial(tag.tag_popup, "Green"))
     file_menu.add_cascade(
         label="Tag selected",
@@ -535,11 +584,21 @@ def create_widgets(window):
         command=del_dup_popup,
     )
     sub_del_tag = ttk.Menu(window, tearoff=False, font=("TkDefaultFont", font_size))
-    sub_del_tag.add_command(label="1 minitue (Red)", command=partial(del_tag_popup, "Minitue"))
-    sub_del_tag.add_command(label="1 hour (Orange)", command=partial(del_tag_popup, "Hour"))
-    sub_del_tag.add_command(label="1 day (Purple)", command=partial(del_tag_popup, "Day"))
-    sub_del_tag.add_command(label="7 day (Yellow)", command=partial(del_tag_popup, "Week"))
-    sub_del_tag.add_command(label="30 day (Green)", command=partial(del_tag_popup, "Month"))
+    sub_del_tag.add_command(
+        label="1 minitue (Red)", command=partial(del_tag_popup, "Minitue")
+    )
+    sub_del_tag.add_command(
+        label="1 hour (Orange)", command=partial(del_tag_popup, "Hour")
+    )
+    sub_del_tag.add_command(
+        label="1 day (Purple)", command=partial(del_tag_popup, "Day")
+    )
+    sub_del_tag.add_command(
+        label="7 day (Yellow)", command=partial(del_tag_popup, "Week")
+    )
+    sub_del_tag.add_command(
+        label="30 day (Green)", command=partial(del_tag_popup, "Month")
+    )
     file_menu.add_cascade(
         label="Delete tagged",
         image=delete_photo,
@@ -621,8 +680,6 @@ def create_widgets(window):
     window.bind("<Control-Shift-N>", wrap_new_dir)
 
 
-
-
 def cd_drive(drive, queryNames):
     global fileNames, currDrive, cwdLabel
     cwdLabel.config(text=" " + drive)
@@ -630,6 +687,7 @@ def cd_drive(drive, queryNames):
     fileNames = os.listdir(currDrive)
     os.chdir(currDrive + "/")
     refresh(queryNames)
+
 
 def up_key(event):
     global selectedItem, items
@@ -682,7 +740,6 @@ def rename_popup():
         )
 
 
-
 def selectItem(event):
     global selectedItem, items
     # selectedItemID = items.focus()
@@ -704,27 +761,29 @@ def keybinds():
         title="Info",
     )
 
+
 def show_tag_popup():  # popup window
-    str_files_Red = ''
-    str_files_Green = ''
-    str_files_Yellow = ''
-    str_files_Orange = ''
-    str_files_Purple = ''
+    str_files_Red = ""
+    str_files_Green = ""
+    str_files_Yellow = ""
+    str_files_Orange = ""
+    str_files_Purple = ""
     for file in tag.tag_files:
-        if file['tag_type'] == 'Red':
-            str_files_Red += file['file_name'] + '\n'
-        elif file['tag_type'] == 'Green':
-            str_files_Green += file['file_name'] + '\n'
-        elif file['tag_type'] == 'Yellow':
-            str_files_Yellow += file['file_name'] + '\n'
-        elif file['tag_type'] == 'Orange':
-            str_files_Orange += file['file_name'] + '\n'
-        elif file['tag_type'] == 'Purple':
-            str_files_Purple += file['file_name'] + '\n'
+        if file["tag_type"] == "Red":
+            str_files_Red += file["file_name"] + "\n"
+        elif file["tag_type"] == "Green":
+            str_files_Green += file["file_name"] + "\n"
+        elif file["tag_type"] == "Yellow":
+            str_files_Yellow += file["file_name"] + "\n"
+        elif file["tag_type"] == "Orange":
+            str_files_Orange += file["file_name"] + "\n"
+        elif file["tag_type"] == "Purple":
+            str_files_Purple += file["file_name"] + "\n"
     Messagebox.ok(
-        message=f'Red:\n {str_files_Red}Orange:\n {str_files_Orange}Purple:\n {str_files_Purple}Yellow:\n {str_files_Yellow}Green:\n {str_files_Green}',
+        message=f"Red:\n {str_files_Red}Orange:\n {str_files_Orange}Purple:\n {str_files_Purple}Yellow:\n {str_files_Yellow}Green:\n {str_files_Green}",
         title="Show Tagged files",
     )
+
 
 def about_popup():  # popup window
     Messagebox.ok(
@@ -832,14 +891,38 @@ def del_file_popup():
             message="There is no selected file or directory.", title="Info"
         )
 
+
 def del_dup_popup():
     dup_items = []
     fileNames = os.listdir(os.getcwd())
     for name1 in fileNames:
         for name2 in fileNames:
-            for postfix in [' - Copy', ' - Copy (2)', ' - Copy (3)', ' - Copy (4)', ' - Copy (5)', ' - Copy (6)', ' - Copy (7)', ' - Copy (8)', ' - Copy (9)', ' - Copy (10)'
-                            , ' (1)', ' (2)', ' (3)', ' (4)', ' (5)', ' (6)', ' (7)', ' (8)', ' (9)', ' (10)']:
-                if name1.split('.', maxsplit=1)[0] == name2.split('.', maxsplit=1)[0] + postfix:
+            for postfix in [
+                " - Copy",
+                " - Copy (2)",
+                " - Copy (3)",
+                " - Copy (4)",
+                " - Copy (5)",
+                " - Copy (6)",
+                " - Copy (7)",
+                " - Copy (8)",
+                " - Copy (9)",
+                " - Copy (10)",
+                " (1)",
+                " (2)",
+                " (3)",
+                " (4)",
+                " (5)",
+                " (6)",
+                " (7)",
+                " (8)",
+                " (9)",
+                " (10)",
+            ]:
+                if (
+                    name1.split(".", maxsplit=1)[0]
+                    == name2.split(".", maxsplit=1)[0] + postfix
+                ):
                     if name1 not in dup_items:
                         dup_items.append(name1)
     if dup_items:
@@ -856,21 +939,22 @@ def del_dup_popup():
             message="There is no duplicate file or directory.", title="Info"
         )
 
+
 def del_tag_popup(del_upto):
     if tag.tag_files:
         delta = 0
         if del_upto == "Minitue":
-            delta = timedelta(minutes=1)    
+            delta = timedelta(minutes=1)
         elif del_upto == "Hour":
-            delta = timedelta(hours=1)    
+            delta = timedelta(hours=1)
         elif del_upto == "Day":
-            delta = timedelta(days=1)    
+            delta = timedelta(days=1)
         elif del_upto == "Week":
-            delta = timedelta(days=7)    
+            delta = timedelta(days=7)
         elif del_upto == "Month":
-            delta = timedelta(days=30)    
+            delta = timedelta(days=30)
         for tag_item in tag.tag_files:
-            del_upto_date = datetime.strptime(tag_item['tag_date'],date_format)
+            del_upto_date = datetime.strptime(tag_item["tag_date"], date_format)
             if datetime.now() >= del_upto_date + delta:
                 f_n = tag_item["file_name"]
                 answer = Messagebox.yesno(
@@ -887,11 +971,12 @@ def del_tag_popup(del_upto):
             message="There is no tagged file or directory.", title="Info"
         )
 
+
 def wrap_del(event):  # wrapper for delete keybind
     del_file_popup(None)
 
 
-def del_file(file_name:str):
+def del_file(file_name: str):
     if not file_name:
         file_name = os.getcwd() + "/" + selectedItem
     if os.path.isfile(file_name):
@@ -900,7 +985,9 @@ def del_file(file_name:str):
         # os.rmdir(os.getcwd() + "/" + selectedItem)
         shutil.rmtree(file_name)
 
+
 # main function
+
 
 def main():
     global theme
