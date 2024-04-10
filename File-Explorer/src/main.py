@@ -49,7 +49,7 @@ def checkPlatform():
     elif platform == "linux":
         available_drives = "/"
         currDrive = available_drives
- 
+
 def createWindow():
     # root = tk.Tk()
     root = ttk.Window(themename=theme)
